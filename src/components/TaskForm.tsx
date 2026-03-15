@@ -1,5 +1,5 @@
 import { type Task } from "../types/types.ts";
-import React,{type ChangeEvent, type FormEvent, useState} from "react";
+import React,{type ChangeEvent, useState} from "react";
 
 type Props = {
     addTask: (task: Task) => void;
@@ -7,10 +7,10 @@ type Props = {
 
 const TaskForm = ({ addTask }: Props) => {
    const [title, setTitle] = useState<string>("");
-   const [priority, setPriority] = useState("Low");
+   const [priority, setPriority] = useState<"Low" | "Medium" | "High">("Low");
    const [error, setError] = useState<string>("");
 
-   const handleSubmit = (e: React.FormEvent) => {
+   const handleSubmit = (e: React.SubmitEvent) => {
        e.preventDefault();
 
        if(title.trim().length < 3) {
@@ -42,12 +42,15 @@ const TaskForm = ({ addTask }: Props) => {
             />
             <select
                 value={priority}
-                onChange={(e:  ChangeEvent<HTMLSelectElement>) => setPriority(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                    setPriority(e.target.value as "Low" | "Medium" | "High")
+                }
             >
-                <option>Low</option>
-                <option>Medium</option>
-                <option>High</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
             </select>
+
             <button type="submit">Add a task</button>
             {error && <p>{error}</p>}
 
